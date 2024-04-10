@@ -16,7 +16,11 @@ mongoose
 
 const app = express();
 
-const { PORT, API_URL } = process.env;
+const {
+  PORT = 3005,
+  API_URL = "http://127.0.0.1",
+  MONGO_URL = "mongodb://localhost:27017/backend",
+} = process.env;
 
 app.use(cors());
 app.use(loggerOne);

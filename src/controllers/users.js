@@ -2,9 +2,13 @@ const User = require("../models/user");
 
 const getUsers = (request, response) => {
   //Get all users
-  return User.find({}).then((data) => {
-    response.status(200).send(data);
-  });
+  return User.find({})
+    .then((data) => {
+      response.status(200).send(data);
+    })
+    .catch((e) => {
+      response.status(500).send(e.message);
+    });
 };
 
 const getUser = (request, response) => {
@@ -13,7 +17,11 @@ const getUser = (request, response) => {
   // response.send(`User with id: ${user_id}`);
   return User.findById(user_id)
     .then((user) => {
-      response.status(201).send(user);
+      if (!user) {
+        response.sendStatus(404);
+      } else {
+        response.status(200).send(user);
+      }
     })
     .catch((e) => {
       response.status(500).send(e.message);
@@ -50,7 +58,11 @@ const deleteUser = (request, response) => {
   const { user_id } = request.params;
   return User.findByIdAndDelete(user_id, { ...request.body })
     .then((user) => {
-      response.status(201).send(user);
+      if (!user) {
+        response.sendStatus(404);
+      } else {
+        response.status(201).send(user);
+      }
     })
     .catch((e) => {
       response.status(500).send(e.message);
